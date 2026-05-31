@@ -1,0 +1,50 @@
+number of jobs, number of machines, initial seed, upper bound and lower bound :
+          4           2           0           0           15
+processing times :
+ 2 5 4 3
+ 3 2 1 5
+number of jobs, number of machines, initial seed, upper bound and lower bound :
+          4           2           0           0           15
+processing times :
+ 2 5 4 3
+ 3 2 1 5
+number of jobs, number of machines, initial seed, upper bound and lower bound :
+          4           2           0           0           15
+processing times :
+ 2 5 4 3
+ 3 2 1 5
+number of jobs, number of machines, initial seed, upper bound and lower bound :
+          4           2           0           0           15
+processing times :
+ 2 5 4 3
+ 3 2 1 5
+number of jobs, number of machines, initial seed, upper bound and lower bound :
+          4           2           0           0           15
+processing times :
+ 2 5 4 3
+ 3 2 1 5
+number of jobs, number of machines, initial seed, upper bound and lower bound :
+          4           2           0           0           15
+processing times :
+ 2 5 4 3
+ 3 2 1 5
+number of jobs, number of machines, initial seed, upper bound and lower bound :
+          4           2           0           0           15
+processing times :
+ 2 5 4 3
+ 3 2 1 5
+number of jobs, number of machines, initial seed, upper bound and lower bound :
+          4           2           0           0           15
+processing times :
+ 2 5 4 3
+ 3 2 1 5
+number of jobs, number of machines, initial seed, upper bound and lower bound :
+          4           2           0           0           15
+processing times :
+ 2 5 4 3
+ 3 2 1 5
+number of jobs, number of machines, initial seed, upper bound and lower bound :
+          4           2           0           0           15
+processing times :
+ 2 5 4 3
+ 3 2 1 5
