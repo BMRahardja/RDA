@@ -6,7 +6,7 @@ import RDA.RDA;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Algoritma Red Deer (RDA) multi‑objektif (Rajendran)");
+        System.out.println("Algoritma Red Deer (RDA) multi-objektif (Rajendran)");
         System.out.println("Meminimasi Makespan + Total Flow Time");
 
         System.out.print("Nama file yang dijalankan: ");

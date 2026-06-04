@@ -13,20 +13,17 @@ public class RDA {
     private int nJobs, nMachines;
     private Random rand;
 
-    // population data
     private List<int[]> population;
-    private int[] msPopulation;   // makespan of each member
-    private int[] tfPopulation;   // total flow time of each member
+    private int[] msPopulation;
+    private int[] tfPopulation;
 
     private List<int[]> stags;
     private List<int[]> hinds;
     private List<List<int[]>> harems;
 
-    // Global best values for relative deviation calculation
     private int globalMinMS = Integer.MAX_VALUE;
     private int globalMinTF = Integer.MAX_VALUE;
 
-    // Best solution and its objectives (according to combined fitness)
     private int[] bestPermutation;
     private int bestMS, bestTF;
     private double bestCombinedFitness = Double.MAX_VALUE;
@@ -52,7 +49,7 @@ public class RDA {
         for (int i = 0; i < nPop; i++) {
             population.add(randomPermutation(nJobs));
         }
-        evaluateAll();
+        evaluateAll();     // now also tracks the best solution
         classify();
 
         // Main loop
@@ -69,10 +66,12 @@ public class RDA {
     // ---------- Evaluation helpers (multi‑objective) ----------
     private void evaluateAll() {
         for (int i = 0; i < population.size(); i++) {
-            int[] obj = evaluate(population.get(i));
+            int[] perm = population.get(i);
+            int[] obj = evaluate(perm);
             msPopulation[i] = obj[0];
             tfPopulation[i] = obj[1];
             updateGlobals(obj[0], obj[1]);
+            trackBest(perm, obj[0], obj[1]);   // <-- FIX: track best from the start
         }
     }
 
@@ -80,6 +79,7 @@ public class RDA {
         for (int[] perm : list) {
             int[] obj = evaluate(perm);
             updateGlobals(obj[0], obj[1]);
+            trackBest(perm, obj[0], obj[1]);   // <-- FIX: track best for offspring
         }
     }
 
@@ -93,20 +93,8 @@ public class RDA {
     private void updateGlobals(int ms, int tf) {
         if (ms < globalMinMS) globalMinMS = ms;
         if (tf < globalMinTF) globalMinTF = tf;
-
-        // Compute combined fitness relative to current global minima
-        double fitness = combinedFitness(ms, tf);
-        if (fitness < bestCombinedFitness) {
-            bestCombinedFitness = fitness;
-            bestMS = ms;
-            bestTF = tf;
-            // store the permutation – we need it when the global best is found
-            // We'll store it separately; but here we don't have the permutation.
-            // So we record the best permutation when we actually evaluate it.
-        }
     }
 
-    // Track the best permutation whenever we find a new global best or better combined fitness
     private void trackBest(int[] perm, int ms, int tf) {
         double fit = combinedFitness(ms, tf);
         if (fit < bestCombinedFitness) {
@@ -123,7 +111,6 @@ public class RDA {
                 + (tf - globalMinTF) / (double) globalMinTF;
     }
 
-    // Compute fitness for a population member by index
     private double fitnessOf(int idx) {
         return combinedFitness(msPopulation[idx], tfPopulation[idx]);
     }
@@ -132,7 +119,6 @@ public class RDA {
     private void classify() {
         Integer[] indices = new Integer[nPop];
         for (int i = 0; i < nPop; i++) indices[i] = i;
-        // Sort by combined fitness (ascending) – lower is better
         Arrays.sort(indices, (a, b) -> Double.compare(fitnessOf(a), fitnessOf(b)));
 
         stags = new ArrayList<>();
@@ -150,6 +136,7 @@ public class RDA {
         for (int s = 0; s < stags.size(); s++) {
             int[] stag = stags.get(s);
             int[] stagObj = evaluate(stag);
+            updateGlobals(stagObj[0], stagObj[1]);
             double stagFit = combinedFitness(stagObj[0], stagObj[1]);
 
             for (int r = 0; r < roarMoves; r++) {
@@ -280,7 +267,6 @@ public class RDA {
     }
 
     private void selection(List<int[]> offspring) {
-        // Combine current population and offspring
         List<int[]> combined = new ArrayList<>(population);
         combined.addAll(offspring);
 
@@ -291,6 +277,7 @@ public class RDA {
             updateGlobals(obj[0], obj[1]);
             msCombined[i] = obj[0];
             tfCombined[i] = obj[1];
+            trackBest(combined.get(i), obj[0], obj[1]);
         }
 
         Integer[] idx = new Integer[combined.size()];
@@ -306,8 +293,6 @@ public class RDA {
             population.add(combined.get(pos));
             msPopulation[i] = msCombined[pos];
             tfPopulation[i] = tfCombined[pos];
-            // track best
-            trackBest(combined.get(pos), msCombined[pos], tfCombined[pos]);
         }
     }
 
